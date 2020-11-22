@@ -6,6 +6,7 @@ import java.util.List;
 import com.laidw.asn1.bean.Asn1Type;
 import com.laidw.asn1.bean.Asn1TypeName;
 import com.laidw.asn1.interpreter.Interpreter;
+import com.laidw.asn1.tool.Asn1Helper;
 
 //Validity本身是SEQUENCE类型
 public class Validity implements Interpreter {
@@ -30,8 +31,8 @@ public class Validity implements Interpreter {
 
 	public String getParseResult(int level) {
 		StringBuilder sb = new StringBuilder();
-		String space = Interpreter.getSpace(level);
-		sb.append(space).append("from: ").append(from.forceToGetValue()).append(newLine);
+		String space = Asn1Helper.getSpace(level);
+		sb.append(space).append("from: ").append(from.forceToGetValue()).append(Asn1Helper.newLine);
 		sb.append(space).append("to: ").append(to.forceToGetValue());
 		return sb.toString();
 	}

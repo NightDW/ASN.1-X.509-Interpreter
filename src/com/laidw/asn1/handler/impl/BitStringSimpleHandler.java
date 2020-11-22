@@ -12,8 +12,9 @@ public class BitStringSimpleHandler extends AbstractSimpleHandler {
 		
 		StringBuilder ret = new StringBuilder(Asn1Helper.toBinString(content, 1, content.getLength() - 1));
 		
-		//去掉末尾的length个0
-		for(int i = 0; i < length; i++) ret.deleteCharAt(ret.length() - 1);
+		//去掉末尾的填充的0
+		for(int i = 0; i < length; i++)
+			ret.deleteCharAt(ret.length() - 1);
 		
 		return ret.toString();
 	}

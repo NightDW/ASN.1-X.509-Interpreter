@@ -6,6 +6,7 @@ import java.util.List;
 import com.laidw.asn1.bean.Asn1Type;
 import com.laidw.asn1.bean.Asn1TypeName;
 import com.laidw.asn1.interpreter.Interpreter;
+import com.laidw.asn1.tool.Asn1Helper;
 
 //Certificate是ASN1中的SEQUENCE类型
 public class Certificate implements Interpreter {
@@ -30,7 +31,8 @@ public class Certificate implements Interpreter {
 
 	public String getParseResult(int level) {
 		StringBuilder sb = new StringBuilder();
-		String space = Interpreter.getSpace(level);
+		String space = Asn1Helper.getSpace(level);
+		String newLine = Asn1Helper.newLine;
 		sb.append(space).append("tbsCertificate:").append(newLine).append(tbsCertificate.getParseResult(level + 1)).append(newLine);
 		sb.append(space).append("signatureAlgorithm:").append(newLine).append(signatureAlgorithm.getParseResult(level + 1)).append(newLine);
 		sb.append(space).append("signatureValue: ").append(signatureValue.forceToGetValue()).append(newLine);

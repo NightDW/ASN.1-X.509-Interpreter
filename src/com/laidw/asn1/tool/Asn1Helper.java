@@ -40,6 +40,15 @@ public class Asn1Helper {
 		map.put(Asn1TypeName.IA5_STRING, new NormalStringSimpleHandler());
 		map.put(Asn1TypeName.UTC_TIME, new UtcTimeSimpleHandler());
 	}
+
+	public static String newLine = System.getProperty("line.separator");
+	public static String getSpace(int level) {
+		String space = "    ";
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < level; i++)
+			sb.append(space);
+		return sb.toString();
+	}
 	
 	public static int parseInt(MyByteArr arr, int begin, int length) {
 		if(length > 4) length = 4;

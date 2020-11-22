@@ -2,10 +2,12 @@ package com.laidw.asn1.to;
 
 import java.security.InvalidParameterException;
 
-//把文件数据读取到byte[]数组后需要对该数组进行分部分解析
-//如果直接根据byte[]数组创建一个子数组会比较浪费时间和空间
-//考虑到我们不会去更改byte[]数组，因此定义该类来对byte[]数组进行包装
-//该类用起来和普通数组是一样的
+/**
+ * 把文件数据读取到byte[]数组后需要对该数组进行分部分解析
+ * 如果直接根据byte[]数组创建一个子数组会比较浪费时间和空间
+ * 考虑到我们不会去更改byte[]数组，因此定义该类来对byte[]数组进行包装
+ * 该类用起来和普通数组是一样的
+ */
 public class MyByteArr {
 	
 	private byte[] bytes;
@@ -34,8 +36,7 @@ public class MyByteArr {
 	
 	public byte[] getBytes() {
 		byte[] ret = new byte[length];
-		for(int i = 0; i < length; i++)
-			ret[i] = bytes[begin + i];
+        System.arraycopy(bytes, begin, ret, 0, length);
 		return ret;
 	}
 	

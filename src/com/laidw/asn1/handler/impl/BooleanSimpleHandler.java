@@ -5,6 +5,8 @@ import com.laidw.asn1.to.MyByteArr;
 public class BooleanSimpleHandler extends AbstractSimpleHandler{
 
 	protected String handleInternal(MyByteArr content) {
-		return content.get(0) == 0 ? "false" : "true";
+
+	    //该字节为0说明表示false
+		return "" + (content.get(0) != 0);
 	}
 }

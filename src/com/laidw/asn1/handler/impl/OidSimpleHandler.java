@@ -7,7 +7,7 @@ import com.laidw.asn1.to.MyByteArr;
 
 public class OidSimpleHandler extends AbstractSimpleHandler {
 	
-	public static Map<String, String> mapping;
+	private static Map<String, String> mapping;
 	
 	static {
 		mapping = new HashMap<>();
@@ -36,15 +36,19 @@ public class OidSimpleHandler extends AbstractSimpleHandler {
 		mapping.put("2.5.29.37", "extKeyUsage");
 	}
 
-	//Oid的格式为v1.v2.v3.v4.v5..vn
-	//content的第一个字节表示v1 * 40 + v2，其中v1在0-2间取值，v2在0-39间取值
-	//v3及之后的数解析方法相同：从左往右遍历，直到找到一个小于0x80的数
-	//从开始遍历的字节到这个小于0x80的字节表示的就是一个vn，用128进制计算出真实值（大于0x80的字节要减掉0x80）
+	/*
+	 * Oid的格式为v1.v2.v3.v4.v5..vn
+	 * content的第一个字节表示v1 * 40 + v2，其中v1在0-2间取值，v2在0-39间取值
+	 * v3及之后的数解析方法相同：从左往右遍历，直到找到一个小于0x80的数
+	 * 从开始遍历的字节到这个小于0x80的字节表示的就是一个vn，用128进制计算出真实值（大于0x80的字节要减掉0x80）
+	 */
 	protected String handleInternal(MyByteArr content) {
 		StringBuilder sb = new StringBuilder();
-		int tem = content.get(0);
-		sb.append(tem / 40).append(".").append(tem % 40).append(".");
-		int i = 1; tem = 0;
+
+		//解析出v1和v2
+		sb.append(content.get(0) / 40).append(".").append(content.get(0) % 40).append(".");
+
+		int i = 1, tem = 0;
 		while(i < content.getLength()) {
 			while(content.get(i) >= 0x80) {
 				tem *= 128;
@@ -54,8 +58,10 @@ public class OidSimpleHandler extends AbstractSimpleHandler {
 			tem *= 128;
 			tem += content.get(i);
 			sb.append(tem).append(".");
-			i++; tem = 0;
+			i++;
+			tem = 0;
 		}
+
 		//去掉末尾的点，并查找相关的含义
 		sb.deleteCharAt(sb.length() - 1);
 		String value = mapping.get(sb.toString());

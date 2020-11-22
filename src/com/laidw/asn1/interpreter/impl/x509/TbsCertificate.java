@@ -7,6 +7,7 @@ import java.util.List;
 import com.laidw.asn1.bean.Asn1Type;
 import com.laidw.asn1.bean.Asn1TypeName;
 import com.laidw.asn1.interpreter.Interpreter;
+import com.laidw.asn1.tool.Asn1Helper;
 
 //TbsCertificate是ASN1中的SEQUENCE类型
 public class TbsCertificate implements Interpreter{
@@ -53,6 +54,7 @@ public class TbsCertificate implements Interpreter{
 				case CTX_SPECIFIC_02: subjectUniqueID = list.get(i); break;
 				case CTX_SPECIFIC_03: {
 					extensions = new ArrayList<>();
+
 					//CTX_SPECIFIC_03包含了SEQUENCE，该SEQUENCE中的内容才表示extensions
 					for(Asn1Type tem : list.get(i).getSubTypes().get(0).getSubTypes())
 						extensions.add(new Extension(tem));
@@ -65,7 +67,8 @@ public class TbsCertificate implements Interpreter{
 
 	public String getParseResult(int level) {
 		StringBuilder sb = new StringBuilder();
-		String space = Interpreter.getSpace(level);
+		String space = Asn1Helper.getSpace(level);
+		String newLine = Asn1Helper.newLine;
 		sb.append(space).append("version(0-v1; 1-v2; 2-v3): ").append(version.getSubTypes().get(0).forceToGetValue()).append(newLine);
 		sb.append(space).append("serialNumber: ").append(serialNumber.forceToGetValue()).append(newLine);
 		sb.append(space).append("signature:").append(newLine).append(signature.getParseResult(level + 1)).append(newLine);
@@ -79,7 +82,7 @@ public class TbsCertificate implements Interpreter{
 			sb.append(space).append("subjectUniqueID: ").append(subjectUniqueID.forceToGetValue()).append(newLine);
 		if(extensions != null) {
 			sb.append(space).append("extensions:").append(newLine);
-			space = Interpreter.getSpace(level + 1);
+			space = Asn1Helper.getSpace(level + 1);
 			for(Extension ex : extensions)
 				sb.append(space).append("extension:").append(newLine).append(ex.getParseResult(level + 2)).append(newLine);
 		}

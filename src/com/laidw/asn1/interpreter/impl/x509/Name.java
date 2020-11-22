@@ -7,12 +7,15 @@ import java.util.List;
 import com.laidw.asn1.bean.Asn1Type;
 import com.laidw.asn1.bean.Asn1TypeName;
 import com.laidw.asn1.interpreter.Interpreter;
+import com.laidw.asn1.tool.Asn1Helper;
 
-//X.509中实际的定义：
-//Name::=CHOICE{RDNSequence}
-//RDNSequence::=SEQUENCE OF RelativeDistinguishedName
-//RelativeDistinguishedName::=SET OF AttributeTypeAndValue
-//AttributeTypeAndValue::=SEQUENCE{type AttributeType, value AttributeValue}
+/**
+ * X.509中实际的定义：
+ * Name::=CHOICE{RDNSequence}
+ * RDNSequence::=SEQUENCE OF RelativeDistinguishedName
+ * RelativeDistinguishedName::=SET OF AttributeTypeAndValue
+ * AttributeTypeAndValue::=SEQUENCE{type AttributeType, value AttributeValue}
+ */
 public class Name implements Interpreter {
 	
 	//实际的格式为：一个SET包含一个SEQUENCE，该SEQUENCE又包含一个Oid和一个PrintableStr
@@ -34,13 +37,15 @@ public class Name implements Interpreter {
 
 	public String getParseResult(int level) {
 		StringBuilder sb = new StringBuilder();
-		String space = Interpreter.getSpace(level);
+		String space = Asn1Helper.getSpace(level);
+		String newLine = Asn1Helper.newLine;
 		Asn1Type sequence;
-		for(int i = 0; i < sets.size(); i++) {
-			sequence = sets.get(i).getSubTypes().get(0);
-			sb.append(space).append(sequence.getSubTypes().get(0).forceToGetValue()).append(": ")
-			  .append(sequence.getSubTypes().get(1).forceToGetValue()).append(newLine);
-		}
+        for (Asn1Type set : sets) {
+            sequence = set.getSubTypes().get(0);
+            sb.append(space)
+                    .append(sequence.getSubTypes().get(0).forceToGetValue()).append(": ")
+                    .append(sequence.getSubTypes().get(1).forceToGetValue()).append(newLine);
+        }
 		if(sb.lastIndexOf(newLine) == sb.length() - newLine.length())
 			sb.delete(sb.lastIndexOf(newLine), sb.length());
 		return sb.toString();

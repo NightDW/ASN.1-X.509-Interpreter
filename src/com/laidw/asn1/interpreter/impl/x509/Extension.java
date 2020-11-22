@@ -6,6 +6,7 @@ import java.util.List;
 import com.laidw.asn1.bean.Asn1Type;
 import com.laidw.asn1.bean.Asn1TypeName;
 import com.laidw.asn1.interpreter.Interpreter;
+import com.laidw.asn1.tool.Asn1Helper;
 
 //Extension本身是SEQUENCE类型
 public class Extension implements Interpreter {
@@ -39,7 +40,8 @@ public class Extension implements Interpreter {
 
 	public String getParseResult(int level) {
 		StringBuilder sb = new StringBuilder();
-		String space = Interpreter.getSpace(level);
+		String space = Asn1Helper.getSpace(level);
+		String newLine = Asn1Helper.newLine;
 		sb.append(space).append("extnID: ").append(extnID.forceToGetValue()).append(newLine);
 		if(critical != null)
 			sb.append(space).append("critical: ").append(critical.forceToGetValue()).append(newLine);
